@@ -37,11 +37,7 @@ Revisiones:
 
 <Fecha> <Autor modificación> <comentarios>
 
-
-
 */
-
-include <TextGenerator.scad> //para poner la regla en mm
 
 /***************************************/
 // Inicio de parámetros configurables
@@ -55,30 +51,33 @@ gridSizeX = 100;
 gridSizeY = 100;
 gridSizeZ = 100;
 
-
-gridTextSize       = 0.5 ; 	// Tamaño del texto 3D a modo de regla 
-gridSmallStepTextX = true ; // texto de regla en cada linea fina del eje X
-gridSmallStepTextY = true ; // texto de regla en cada linea fina del eje Y
-gridSmallStepTextZ = true ; // texto de regla en cada linea fina del eje Z
-gridShowAxes       = true ; // Muestra 3 flechas indicando el lado positivo de cada eje en el origen de coordenadas.
-
-
-/*	Posibilidad de ocultar algún eje
-	- valores posibles: true o false */
+/*
+	Posibilidad de ocultar algún eje
+	- valores posibles: true o false
+*/
 gridShowX = true;
 gridShowY = true;
 gridShowZ = false;
 
-/*	Grosor de cada línea
+/* Muestra 3 flechas indicando el lado positivo de cada eje */
+gridShowAxes = false;
+
+
+/*
+	Grosor de cada línea
 	- Dado que se usan cubos para pintar cada línea, 
-	  es la longitud de cada lado del cubo  */
+	  es la longitud de cada lado del cubo 
+*/
 gridLineX = 0.2; 
-gridLineY = 0.2; 
-gridLineZ = 0.2; 
+gridLineY = 0.2;
+gridLineZ = 0.2;
 
 
-smallStep = 10 ;  /* distancia entre 2 líneas finas */
-bigStep   = 50 ; /* distancia entre 2 lineas gruesas */
+/* distancia entre 2 líneas finas */
+smallStep = 10 ; 
+
+/* distancia entre 2 lineas gruesas */
+bigStep = 50 ;
 
 /***************************************/
 // Fin de parámetros configurables
@@ -86,88 +85,44 @@ bigStep   = 50 ; /* distancia entre 2 lineas gruesas */
 
 if ( gridShowX ) {
 	//un cubo por cada 10mm 
-	for ( i=[-gridSizeX :smallStep: gridSizeX]){
+	for ( i=[-gridSizeX :smallStep: gridSizeX])
 		color("red")
 		translate([0, i, -gridLineX])
 			cube([ 2*gridSizeX , gridLineX,  gridLineX], center=true);
-			
-		//añadir el texto en 3D en cada linea fina
-		if (gridSmallStepTextX){
-			color("red")
-			translate([ gridSizeX +1 , i, 0.1])
-			scale([gridTextSize,gridTextSize,gridTextSize])
-			rotate (a = [45, 0,-30])
-				drawtext(str(i));
-		}
-	}
+
 	//una linea gruesa cada 50 mm 
-	for ( i=[-gridSizeX :bigStep: gridSizeX]){ 
+	for ( i=[-gridSizeX :bigStep: gridSizeX]) 
 		color("red")
 		translate([0, i, -2*gridLineX+gridLineX/2])
 			cube([ 2*gridSizeX , 2*gridLineX,  2*gridLineX], center=true);
-		
-		//añadir el texto en 3D en cada linea gruesa
-		//si no se pintó en lineas finas
-		if (!gridSamllStepTextX ) {
-			color("red")
-			translate([ gridSizeX + 1, i, 0.1])
-			scale([gridTextSize,gridTextSize,gridTextSize])
-			rotate (a = [45, 0,-30])
-				drawtext(str(i));
-		}
-	}
+	
 	
 }		
 
 if ( gridShowY ) {
-	for ( y=[-gridSizeY :smallStep: gridSizeY]){
+	for ( y=[-gridSizeY :smallStep: gridSizeY])
 		color("green")
 		translate([y , 0,-gridLineY])
 			cube([ gridLineX , 2*gridSizeY,  gridLineY], center=true);
-
-		if (gridSmallStepTextY){	//añadir el texto en 3D en lineas finas
-			color("green")
-			translate([ y,  gridSizeY + 1,  0.1])
-			rotate (a = [45, 0,30])
-			scale([gridTextSize,gridTextSize,gridTextSize])
-				drawtext(str(y));
-		}
-			
-	}
-	for ( y=[-gridSizeY :bigStep: gridSizeY]){
+	for ( y=[-gridSizeY :bigStep: gridSizeY])
 		color("green")
 		translate([y , 0,-2*gridLineY+gridLineY/2])
 			cube([ 2*gridLineX , 2*gridSizeY,  2*gridLineY], center=true);
 
-		//añadir el texto en 3D en linea gruesa
-		//si no se pintó en lineas finas
-		if (!gridSmallStepTextY) {
-			color("green")
-			translate([ y,  gridSizeY + 1,  0.1])
-			rotate (a = [45, 0,30])
-			scale([gridTextSize,gridTextSize,gridTextSize])
-				drawtext(str(y));
-		}
-	}
-
 }		
 if ( gridShowZ ) {
-for ( z=[-gridSizeZ :smallStep: gridSizeZ])
-	//un cubo por cada 10mm 
-	for ( z=[-gridSizeZ :smallStep: gridSizeZ]){
-		color("blue")
-		translate([0, gridLineZ, z])
-			cube([ 2*gridSizeZ , gridLineZ, gridLineZ ], center=true);
-			
-		//añadir el texto en 3D en cada linea fina
-		if (gridSmallStepTextZ){
-			color("blue")
-			translate([ gridSizeZ + gridTextSize + 2 , 0, z])
-			scale([gridTextSize,gridTextSize,gridTextSize])
-			rotate (a = [90, 0,0])
-				drawtext(str(z));
-		}
-	}
+for ( z=[-gridSizeZ : gridSizeZ])
+	color("blue")
+		translate([z , 0,-gridLineZ])
+		cube([ gridLineZ , gridLineZ,  2*gridSizeZ], center=true);
+	
+	color("red") 
+		translate([0, 0, -gridSizeZ])
+		cube ([2*gridSizeZ, gridLineZ, gridLineZ ], center = true);
+	color("red") 
+		translate([0, 0, gridSizeZ])
+		cube ([2*gridSizeZ, gridLineZ, gridLineZ ], center = true);
+		
 }		
 
 if (gridShowAxes) {
