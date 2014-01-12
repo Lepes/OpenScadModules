@@ -1,83 +1,124 @@
 /*
-Autor: Lepes
+Author: Lepes
 email:  lepecity (at) gmail (dot) com
-Fecha: 03/01/2014
+Date: 03/01/2014
+License: CC (by-sa)
 
-Licencia Creative Commons: Reconocimiento (by): Se permite cualquier explotación de la obra, incluyendo una finalidad comercial, así como la creación de obras derivadas, la distribución de las cuales también está permitida sin ninguna restricción. Más información en: http://es.creativecommons.org/blog/licencias/
 
-Agradecimiento especial a Juan Gonzalez Gomez (Obijuan from CloneWars Spain)
-por la idea original.
+Crédits:
+-  Roland Hieber (rohieb) by its Write.scad that is used to print numbers.
 
-Propósito:
-   Crear una cuadricula de colores para visualizar con más 
-   facilidad los objetos situados en el espacio
-
-Uso de la unidad:
-  - Copiar este archivo en la carpeta de bibliotecas de OpenScad, normalmente en "Documentos\OpenSCAD\libraries"
-  - abrir un archivo nuevo de opensCad y poner (por ejemplo):
-		include  <grid.scad>
-
-  - Funciones implementadas:
-			- showGridX()
-			- showGridY()
-			- showGridZ()
-			- showGridXY()
-			- showGridXZ()
-			- showGridYZ()
-			- showAxes()
-
-  - Parametros: Todas, excepto showAxes(), admiten los siguientes parametros
-	  en este orden para cambiar los configurados por defecto:
-			smallStep
-			bigStep
-			gridSize
-			gridLine
-
-			*showAxes() solo admite los dos ultimos.
-			
-  - Guardar y pulsar F6
-
-Diseño:
-   - Cada línea es un cubo alargado
-   - Se situa por debajo del plano
-   - Se pintan 2 tipos de líneas:
-     - finas: cada 10 unidad (configurable mediante smallStep)
-	 - gruesas: cada 50 unidades (configurable mediante bigStep)
    
-Revisiones:
-
-2014-01-05	Antonio Navarro: Se rehace usando modulos
+Revisions (include your name and comments if you modify this file):
+2014-01-05	Antonio Navarro: Rework using "module"
 
 */
 
+include <write.scad>
+
 /***************************************/
-// Parametros por defecto
+// default parameters
 /***************************************/
 
-defSmallStep=10;		//Espacio entre lineas finas
+defSmallStep=10;	//Espacio entre lineas finas
 defBigStep=50;		//Espacio entre lineas gruesas
 
 defGridSize=100;		//Tamaño total de la cuadrícula
 defGridLine=0.2;		//Grosor de las lineas
 
+defTextRotation = [ 0, 0, 45];
 /***************************************/
 /***************************************/
-
+/* 
+  Crea una serie de cubos paralelos  a lo largo de un eje.
+  smallStep: distancia entre dos líneas del grid, p.e.: 10
+  bigStep: Cubo más grande, para resaltar, p.e.: 50
+  gridSize: El tamaño del grid será siempre el doble de lo que 
+			pongas aqui.
+  gridLine: Tamaño del lado del cubo. 
+*/
 module grid(smallStep=defSmallStep,
 					bigStep=defBigStep,
 					gridSize=defGridSize,
 					gridLine=defGridLine){
-
 	//un cubo por cada 10mm 
-	for ( i=[-gridSize :smallStep: gridSize])
-		translate([0, i, -gridLine])
-			cube([ 2*gridSize , gridLine,  gridLine], center=true);
-
-	//una linea gruesa cada 50 mm 
-	for ( i=[-gridSize :bigStep: gridSize]) 
-		translate([0, i, -2*gridLine+gridLine/2])
-			cube([ 2*gridSize , 2*gridLine,  2*gridLine], center=true);
+	for ( i=[-gridSize :smallStep: gridSize]){
+		if (i % bigStep == 0) {
+			translate([i, 0, -2*gridLine+gridLine/2])
+				cube([ 2*gridLine, 2*gridSize, 2*gridLine], center=true);
+		}
+		else {
+			translate([i, 0, -gridLine])
+				cube([ gridLine, 2*gridSize , gridLine], center=true);
+		}
+	}
 }
+
+/* 
+  Muestra números a modo de escala del grid.
+  Los números se pintan igual que el grid, 
+  desde valores negativos, pasando por cero hasta 
+  el valor positivo.
+  
+  AVISO: Puede ralentizar bastante el renderizado
+		(dependerá de tu ordenador)
+*/
+module showScale(	invertSign = false,
+					smallStep=defSmallStep,
+					gridSize=defGridSize,
+					textRotation = defTextRotation){
+					
+	for ( s=[-gridSize :smallStep: gridSize]){
+		if (!invertSign ) {
+			translate([ s, gridSize + 1, 0])
+				rotate(textRotation)
+				write(str(-s));
+		}
+		else {
+			translate([s, gridSize + 1, 0])
+				rotate(textRotation)
+					write(str(s));
+		}
+		
+	}			
+}				
+
+module showScaleX(	smallStep=defSmallStep,
+					gridSize=defGridSize,
+					textRotation = defTextRotation){
+	
+	color("red") showScale(	true, 
+							smallStep,
+							gridSize, 
+						textRotation);
+}
+
+module showScaleY(
+					smallStep=defSmallStep,
+					gridSize=defGridSize,
+					textRotation = defTextRotation){
+	
+	color("green")
+		rotate ([0, 0, -90]) 
+			showScale(	false, 
+						smallStep,
+						gridSize, 
+						textRotation);
+}
+
+module showScaleZ(
+					smallStep=defSmallStep,
+					gridSize=defGridSize,
+					textRotation = defTextRotation){
+	
+	color("blue")
+			rotate ([0, 90, 0]) 
+				showScale(	false, 
+						smallStep,
+						gridSize, 
+						textRotation);
+}
+
 
 module showGridX(smallStep=defSmallStep,
 					bigStep=defBigStep,
@@ -187,3 +228,4 @@ module showAxes(gridSize=defGridSize,
 			vector(gridSize,
 						gridLine);
 }
+

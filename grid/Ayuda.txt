@@ -1,0 +1,47 @@
+ Licencia Creative Commons: Reconocimiento – CompartirIgual (by-sa): Se permite el uso comercial de la obra y de las posibles obras derivadas, la distribución de las cuales se debe hacer con una licencia igual a la que regula la obra original.
+
+Agradecimiento especial a Juan Gonzalez Gomez (Obijuan from CloneWars Spain)
+por la idea original.
+
+
+Propósito:
+   - Crear una cuadricula de colores para visualizar con más 
+   facilidad los objetos situados en el espacio
+   
+   - Opcionalmente se imprime la escala en números 
+   - Opcionalmente se imprimen los 3 ejes de colores en el origen de coordenadas
+
+Uso de la unidad:
+  - Copiar este archivo en la carpeta de bibliotecas de OpenScad, normalmente en "Documentos\OpenSCAD\libraries"
+  - abrir un archivo nuevo de opensCad y poner (por ejemplo):
+		include  <testgridXY.scad>
+  - Listo. Todas las unidades con nombre testgrid__ vienen preparadas para mostrar los ejes que se quiera.
+
+  
+Grid.scad:
+  - Funciones implementadas:
+			- showGridX(): muestra el grid en el eje que indica
+			- showGridY()
+			- showGridZ()
+			- showGridXY()
+			- showGridXZ()
+			- showGridYZ()
+			- showAxes(): muestra los pivotes de los ejes (tres flechas)
+			- showScaleX(): muestra la escala en números de cada línea en el eje indicado.
+			- showScaleY()
+			- showScaleZ()
+
+  - Parametros: Todas las funciones, excepto showAxes(), admiten los siguientes parametros en este orden para cambiar los configurados por defecto:
+			smallStep  //distancia entre lineas finas
+			bigStep		// distancia entre lineas gruesas
+			gridSize	// tamaño del grid en el lado positivo (el negativo también se hará).
+			gridLine	// grosor de la linea fina (la linea gruesa será el doble).
+
+			*showAxes() solo admite los dos ultimos.
+			
+Diseño: 
+   - Cada línea es un cubo alargado
+   - Se situa por debajo del plano
+   - Se pintan 2 tipos de líneas:
+     - finas: cada 10 unidad (configurable mediante smallStep)
+	 - gruesas: cada 50 unidades (configurable mediante bigStep)

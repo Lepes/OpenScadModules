@@ -1,0 +1,47 @@
+License: CC (by-sa) more info at: http://creativecommons.org/licenses/by-sa/3.0/es/deed.en
+
+Special thanks to Juan Gonzalez Gomez (Obijuan from CloneWars Spain) for the original idea
+
+Purpose: 
+	- Create a coloured grid to easy place objects visually on Open Scad
+	- Scale numbers are printed optionally
+	- Pivot Axes are printe optionally
+
+How to use:
+	- Copy all files into Open Scad Library folder, it is usually located in "Documents\OpenSCAD\libraries"
+	- Open a new Open Scad file and type: 
+		include  <testgridXY.scad>
+  - Done. All files called testgrid__ are prepared to show the grid and axes.
+
+
+  
+Grid.scad:
+  - implemented routines:
+			- showGridX(): Show a grid on the axis/axes
+			- showGridY()
+			- showGridZ()
+			- showGridXY()
+			- showGridXZ()
+			- showGridYZ()
+			- showAxes(): Show Pivot axes on the coordenates origin.
+			- showScaleX(): Show Scale numbers of each line of the grid
+			- showScaleY()
+			- showScaleZ()
+
+  - Parameters of those functions:
+	 All functions excepts showAxes() have the following parameters:
+	 		smallStep  //distance from a thick line to another one
+			bigStep		// distance from a big line to another one.
+			gridSize	// grid size units (on the positive axis, the negative will be display as well)
+			gridLine	// thickness of the thick lines. 
+
+			*showAxes() only use the two last parameters.
+			
+Design: 
+	- Each line is a long cube on one Axis.
+	- It is place bellow the Axis (for example GridXY is drawn on negative Z coordenate, so it doesn't disturb when you create pieces on XY plane)
+	- There are two kind of lines:
+    - small: thick lines printed every smallStep
+	- big: double size of small lines, printed every bigSteps
+
+	
