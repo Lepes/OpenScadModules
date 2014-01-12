@@ -6,7 +6,7 @@ License: CC (by-sa)
 
 
 Crédits:
--  Roland Hieber (rohieb) by its Write.scad that is used to print numbers.
+-  Harlan Martin ( harlan (at) sutlog.com January 2012 by its Write.scad that is used to print numbers.
 
    
 Revisions (include your name and comments if you modify this file):
